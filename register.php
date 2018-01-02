@@ -49,11 +49,28 @@ if(isset($_POST['txtTenDangNhap'])){
 	if(isset($_POST['grpGioiTinh'])){
 	$gioitinh = $_POST['grpGioiTinh'];
 	}
-	$ngaysinh = $_POST['slNgaySinh'];
-	$thangsinh = $_POST['slThangSinh'];
-	$namsinh = $_POST['slNamSinh'];
-	
+    //Bắt lỗi ngày tháng
+	if($_POST['txtNgay']=="" || $_POST['txtThang']=="" || $_POST['txtNam']==""){
+        $Ngay1=$Thang1=$Nam1=0;
+        $Checkday = checkdate($Ngay1,$Thang1,$Nam1);
+        echo "Loi 1";
+    
+    }else
+        if(is_numeric($_POST['txtNgay'])!=true ||  is_numeric($_POST['txtThang'])!=true || is_numeric($_POST['txtNam']) != true){
+        $Ngay1=$Thang1=$Nam1=0;
+        $Checkday = checkdate($Ngay1,$Thang1,$Nam1);
+
+    } 
+    else{
+
+         $Checkday = checkdate($_POST['txtNgay'],$_POST['txtThang'],$_POST['txtNam']); 
+    }
+
+    
+    
+    //Kết thúc bắt lỗi
 	$loi = "";
+    
 if($_POST['txtTenDangNhap']=="" || $_POST['txtMatKhau1'] =="" || $_POST['txtHoTen']=="" || $_POST['txtEmail']=="" || $_POST['txtDiaChi']=="" || $_POST['txtDienThoai']=="" || !isset($gioitinh)){
 		$loi.="<li>Vui lòng nhập đầy đủ thông tin có dấu *!!!</li>";
 	}
@@ -68,13 +85,14 @@ if($_POST['txtTenDangNhap']=="" || $_POST['txtMatKhau1'] =="" || $_POST['txtHoTe
 		$loi.="<li>Địa chị E-mail không hợp lệ</li>";
 	}
 	
-	if($_POST['slNamSinh']=="0"){
-		$loi.="<li>Chưa chọn năm sinh</li>";
+	if($Checkday==false ){
+		$loi.="<li>Ngày nhập chưa đúng </li>";
+       
 	}
 	
 	if($loi!=""){
        
-		echo "<ul class='cssLoi'>".$loi."</ul>";
+		echo "<ul class='cssLoi' style='color: red;'>".$loi."</ul>";
 	}
     else{
 		
@@ -521,72 +539,21 @@ if($_POST['txtTenDangNhap']=="" || $_POST['txtMatKhau1'] =="" || $_POST['txtHoTe
                                  
                             </div>
                               <div class="form-group">
-                                <label for="name">test:</label>
-                                <input id="date" type="date">
+                                <label for="name">Ngày Sinh: &nbsp;</label>
+                                <input type="text" size="5" name="txtNgay" id="txtNgay"  placeholder="Ngay">/
+                                  <input type="text" size="5"  name="txtThang" id="txtThang" placeholder="Thang">/
+                                  <input type="text" size="8" name="txtNam" id="txtNam" placeholder="Nam">
                                  
                             </div>
                             <div class="form-group">
-                                <label for="name">Giới Tính:</label>
+                                <label for="name">Giới Tính:&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 <label class="radio-inline"><input type="radio" name="grpGioiTinh" value="0">Nam</label>
                                 <label class="radio-inline"><input type="radio" name="grpGioiTinh" value="1">Nữ</label>
                             
                             </div>
                             
                         
-                             <div class="form-group">
-                                <label for="name">Ngày sinh:</label>
-                                  
-                          
                            
-                                <span class="input-group-btn">
-                                  <select name="slNgaySinh" id="slNgaySinh" class="form-control" >
-                						<option value="0">Chọn ngày</option>
-										<?php
-                                            for($i=1;$i<=31;$i++)
-                                             {
-                                                 if($i==$ngaysinh){
-                                                     echo "<option value='".$i."' selected=\"selected\">".$i."</option>";
-                                                 }
-                                                 else{
-                                                 echo "<option value='".$i."'>".$i."</option>";
-                                                 }
-                                             }
-                                        ?>
-                				 </select>
-                                </span>
-                                <span class="input-group-btn">
-                                  <select name="slThangSinh" id="slThangSinh" class="form-control">
-                					<option value="0">Chọn tháng</option>
-									<?php
-                                        for($i=1;$i<=12;$i++)
-                                         {
-                                              if($i==$thangsinh){
-                                                 echo "<option value='".$i."' selected=\"selected\">".$i."</option>";
-                                             }
-                                             else{
-                                             echo "<option value='".$i."'>".$i."</option>";
-                                             }
-                                         }
-                                    ?>
-                				</select>
-                                </span>
-                                <span class="input-group-btn">
-                                  <select name="slNamSinh" id="slNamSinh" class="form-control">
-                                    <option value="0">Chọn năm</option>
-                                    <?php
-                                        for($i=1970;$i<=2010;$i++)
-                                         {
-                                             if($i==$namsinh){
-                                                 echo "<option value='".$i."' selected=\"selected\">".$i."</option>";
-                                             }
-                                             else{
-                                             echo "<option value='".$i."'>".$i."</option>";
-                                             }
-                                         }
-                                    ?>
-                                </select>
-                                </span>
-                           </div>
                       
                            
                             
