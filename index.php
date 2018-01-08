@@ -1,6 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+    function kiemtra()
+{
+	if(form1.txtTenDangNhap.value==""){
+		alert(' Chưa nhập tài khoản ')
+		return false;
+	}
+	if(form1.txtTenDangNhap.value.lenght>30){
+		alert(' Tên đăng nhập tối đa 30 ký tự ')
+		return false;
+	}
+	if(form1.txtMatKhau.value==""){
+		alert(' Chưa nhập mật khẩu ')
+		return false;
+	}
+	if(form1.txtMatKhau.value<5){
+		alert(' Mật khẩu ít nhất 5 ký tự ')
+		return false;
+	}
+	return true;
+}
+</script>
 
+<?php
+    include_once('connection.php');
+    //code Đăng nhập
+if(isset($_POST['btnDangNhap'])){
+	$TenDangNhap = $_POST['txtTenDangNhap'];
+	$MatKhau = $_POST['txtMatKhau'];
+	echo"";
+}
+else{
+	echo"";
+}
+?>
+
+<?php
+
+if(isset($_POST['btnDangNhap'])){
+	$txtTenDangNhap = $_POST['txtTenDangNhap'];
+	$txtMatKhau = $_POST['txtMatKhau'];
+	$loi = "";
+    if($TenDangNhap==""){
+		$loi.="<li class='loi'  style='color: red;'>Vui lòng nhập tên đăng nhập!!!</li>";
+	}
+	if($MatKhau==""){
+		$loi.="<li class='loi'  style='color: red;'>Vui lòng nhập mật khẩu!!!</li>";
+	}
+	if($loi!=""){
+		echo $loi;
+	}
+	else {
+		$MatKhau = md5($MatKhau);
+		$result = mysqli_query($conn," SELECT * FROM taikhoan WHERE username_kh='$TenDangNhap' AND pass_kh='$MatKhau' ") or die(mysqli_error($conn));
+//        AND kh_trangthai=1
+		if(mysqli_num_rows($result)==1){
+				$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+				$_SESSION["tendangnhap"] = $TenDangNhap;
+				$_SESSION["quantri"] = $row["loaitk"];
+                
+			//	echo "<script language='javascript'>window.location='index.html'</script>";
+                echo "<ul class='cssLoi'>Đăng nhập thành công</ul>";
+		}
+		else {
+				echo"Đăng nhập thất bại!!!";
+		}
+	}
+}
+?>
 <head>
 
     <meta charset="utf-8">
@@ -12,7 +80,7 @@
     <meta name="keywords" content="">
 
     <title>
-        Obaju : e-commerce template
+        JesterSport
     </title>
 
     <meta name="keywords" content="">
@@ -51,11 +119,11 @@
             </div>
             <div class="col-md-6" data-animate="fadeInDown">
                 <ul class="menu">
-                    <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                    <li><a href="#" data-toggle="modal" data-target="#login-modal">Đăng Nhập</a>
                     </li>
-                    <li><a href="register.php">Register</a>
+                    <li><a href="dangky.php">Đăng ký</a>
                     </li>
-                    <li><a href="contact.html">Contact</a>
+                    <li><a href="contact.html">Liên Hệ</a>
                     </li>
                     <li><a href="#">Recently viewed</a>
                     </li>
@@ -68,25 +136,25 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="Login">Customer login</h4>
+                        <h4 class="modal-title" id="Login">Đăng nhập tài khoản</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="customer-orders.html" method="post">
+                        <form action="" method="post">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="email-modal" placeholder="email">
+                                <input type="text" class="form-control" name="txtTenDangNhap" id="txtTenDangNhap" placeholder="Tên Đăng Nhập">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password-modal" placeholder="password">
+                                <input type="password" class="form-control" name="txtMatKhau" id="txtMatKhau" placeholder="Mật Khẩu">
                             </div>
 
                             <p class="text-center">
-                                <button class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in</button>
+                                <button class="btn btn-primary" name="btnDangNhap" id="btnDangNhap"><i class="fa fa-sign-in"></i> Log in</button>
                             </p>
 
                         </form>
 
-                        <p class="text-center text-muted">Not registered yet?</p>
-                        <p class="text-center text-muted"><a href="register.php"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute and gives you access to special discounts and much more!</p>
+                        <p class="text-left text-muted"><a href="#">Bạn quên mật khẩu?</a></p>
+                        <p class="text-left text-muted"><a href="dangky.php"><strong>Đăng ký ngay!</strong></a> Nếu bạn chưa có tài khoản</p>
 
                     </div>
                 </div>
@@ -306,7 +374,7 @@
                                         <div class="col-sm-3">
                                             <h5>User</h5>
                                             <ul>
-                                                <li><a href="register.php">Register / login</a>
+                                                <li><a href="dangky.php">Register / login</a>
                                                 </li>
                                                 <li><a href="customer-orders.html">Orders history</a>
                                                 </li>
@@ -885,7 +953,7 @@
                         <ul>
                             <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
                             </li>
-                            <li><a href="register.php">Regiter</a>
+                            <li><a href="dangky.php">Regiter</a>
                             </li>
                         </ul>
 
